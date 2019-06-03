@@ -24,6 +24,22 @@ type WeatherInfo struct {
 	High string `json:"temp2"`
 }
 
+// 获取天气情况的函数
+func GetWeatherByCity(cityCode string) WeatherInfo {
+	resp, err := http.Get("http://www.weather.com.cn/data/cityinfo/" + cityCode + ".html")
+	if err != nil {
+		panic(err)
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	weatherBody := WeatherBody{}
+
+	json.Unmarshal(body, &weatherBody)
+
+	return weatherBody.WeatherInfo
+}
+
 func main() {
 	result := []WeatherInfo{}
 	// 声明一个 waitGroup 并增加两个等待信号
@@ -32,16 +48,7 @@ func main() {
 
 	// 使用协程请求北京天气情况
 	go func() {
-		resp, err := http.Get("http://www.weather.com.cn/data/cityinfo/101010100.html")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		weatherBody := WeatherBody{}
-		json.Unmarshal(body, &weatherBody)
-		weatherInfo := weatherBody.WeatherInfo
+		weatherInfo := GetWeatherByCity("101010100")
 		result = append(result, weatherInfo)
 		// 告诉 wg 我已经完成任务
 		wg.Done()
@@ -49,21 +56,12 @@ func main() {
 
 	// 使用协程请求成都天气情况
 	go func() {
-		resp, err := http.Get("http://www.weather.com.cn/data/cityinfo/101270101.html")
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		defer resp.Body.Close()
-		body, _ := ioutil.ReadAll(resp.Body)
-		weatherBody := WeatherBody{}
-		json.Unmarshal(body, &weatherBody)
-		weatherInfo := weatherBody.WeatherInfo
+		weatherInfo := GetWeatherByCity("101270101")
 		result = append(result, weatherInfo)
 		// 告诉 wg 我已经完成任务
 		wg.Done()
 	}()
 
 	wg.Wait()
-	fmt.Printf("%+v", result)
+	fmt.Printf("%+v\n", result)
 }
