@@ -1,0 +1,6 @@
+alias vsc="/Users/lan/Downloads/Visual\ Studio\ Code.app/Contents/MacOS/Electron"
+mkdir leetcode/$1;
+cd leetcode/$1;
+go mod init lanhao/$1
+touch main.go
+vsc main.go
