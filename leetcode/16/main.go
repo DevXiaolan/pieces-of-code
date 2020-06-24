@@ -6,27 +6,21 @@ const MAX, MIN = int(^uint32(0) >> 1), ^int(^uint32(0) >> 1)
 
 func threeSumClosest(nums []int, target int) int {
 	sorted := quickSort(nums)
-	fmt.Printf("%+v\n", sorted)
 	closest := sorted[0] + sorted[1] + sorted[len(sorted)-1]
 	for i := 0; i < len(sorted)-2; i++ {
-		fmt.Printf("Turn %+v\n", i)
 		start := i + 1
 		end := len(sorted) - 1
 		//closest = sorted[i] + sorted[start] + sorted[end]
 		for start < end {
-			fmt.Printf("before %+v\n", []int{i, start, end})
 			if sorted[i]+sorted[start]+sorted[end] > target {
 
 				if (target-sorted[i]-sorted[start]-sorted[end])*(target-sorted[i]-sorted[start]-sorted[end]) < (target-closest)*(target-closest) {
-					fmt.Printf("Got %+v\n", sorted[i]+sorted[start]+sorted[end])
 					closest = sorted[i] + sorted[start] + sorted[end]
 				}
 				start++
 			} else if sorted[i]+sorted[start]+sorted[end] < target {
 
 				if (target-sorted[i]-sorted[start]-sorted[end])*(target-sorted[i]-sorted[start]-sorted[end]) <= (target-closest)*(target-closest) {
-
-					fmt.Printf("Got %+v\n", sorted[i]+sorted[start]+sorted[end])
 					closest = sorted[i] + sorted[start] + sorted[end]
 				}
 				end--
