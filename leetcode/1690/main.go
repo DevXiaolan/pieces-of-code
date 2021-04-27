@@ -4,78 +4,39 @@ import (
 	"fmt"
 )
 
-// Tree .. 前缀树
-type Tree struct {
-	C    byte
-	Next map[byte]*Tree
-	Fin  bool
-}
-
-var mt map[byte]*Tree
-
-func ctree(dict []string) map[byte]*Tree {
-	m := map[byte]*Tree{}
-	for _, str := range dict {
-		bytes := []byte(str)
-		tmp := m
-		for index, c := range bytes {
-			if _, ok := tmp[c]; !ok {
-				tmp[c] = &Tree{
-					C:    c,
-					Next: map[byte]*Tree{},
-				}
-			}
-			if index == len(bytes)-1 {
-				tmp[c].Fin = true
-			}
-			tmp = tmp[c].Next
-		}
+func isFlipedString(s1 string, s2 string) bool {
+	l1 := len(s1)
+	l2 := len(s2)
+	if l1 != l2 {
+		return false
 	}
-	return m
-}
-func respace(dictionary []string, sentence string) int {
-	mt = ctree(dictionary)
-	tmp := mt
-	count, start, flag := 0, 0, 0
-	reset := true
-	bytes := []byte(sentence)
-	for i := 0; i < len(bytes); i++ {
-		v := bytes[i]
-		if _, ok := tmp[v]; !ok {
-
-			if reset {
-				count += i - flag
-				i--
-			} else {
-				i = flag
-			}
-			flag, start = i, i
-			tmp = mt
-			reset = true
+	if s1 == "" {
+		return true
+	}
+	// 找对齐位
+	ds2 := s2 + s2
+	// fmt.Printf("%+v\n", []interface{}{ds2})
+	count := 0
+	j := 0
+	for i := 0; i < 2*l2; i++ {
+		if ds2[i] != s1[j] {
+			count = 0
+			j = 0
 		} else {
-			if tmp[v].Fin {
-				// 如果当前节点是单词结尾
-				flag = i
+			j++
+
+			count++
+			if count == l1 {
+				return true
 			}
-			tmp = tmp[v].Next
-			reset = false
+			if j >= l1 {
+				return false
+			}
 		}
-		if count > len(sentence)*2 {
-			break
-		}
-		fmt.Printf("%+v\n", []interface{}{i, string(v), count})
 	}
-	if flag != len(bytes)-1 {
-		count += len(bytes) - 1 - start
-	}
-	return count
+	return false
 }
+
 func main() {
-	//jesslookedjustliketimherbrother
-	// iwiwwwmuiccwwwwwmumwwwmcciwwuiwcicwwuwicuiwciwmiwicwuwwmuimccwucuuim
-	fmt.Printf("%+v\n", []interface{}{respace(
-		[]string{"wccm", "wiw", "uwwiwcmiiiwmmwicuwu", "mw"},
-		"umwww",
-	)})
-	// i wiw wwmuiccwwwwwmu mw wwmcciwwuiwcicwwuwicuiwciwmiwicwuwwmuimccwucuuim
+	fmt.Printf("%+v\n", []interface{}{isFlipedString("aba", "bab")})
 }

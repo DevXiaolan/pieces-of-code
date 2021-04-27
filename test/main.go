@@ -3,5 +3,8 @@ package main
 import "fmt"
 
 func main() {
-	fmt.Printf("%+v\n", []interface{}{"hello"})
+	m := map[string]bool{}
+	p := m
+
+	fmt.Printf("%+v\n", []interface{}{&m, &p})
 }

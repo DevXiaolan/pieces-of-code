@@ -6,6 +6,7 @@ import (
 
 func find(s string, n int) []string {
 	l := len(s)
+	fmt.Printf("%+v\n", []interface{}{})
 	if l == n*3 {
 		return []string{string(s[0:3]), string(s[3:6]), string(s[6:9]), string(s[9:12])}
 	}
